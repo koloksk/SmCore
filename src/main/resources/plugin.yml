@@ -1,0 +1,9 @@
+name: smcore
+version: ${project.version}
+main: pl.smcore.smcore
+api-version: 1.16
+commands:
+  podpis:
+  panel:
+  rtp:
+  dajrange:
