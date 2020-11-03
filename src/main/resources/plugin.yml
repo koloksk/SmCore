@@ -4,6 +4,12 @@ main: pl.smcore.smcore
 api-version: 1.16
 commands:
   podpis:
+    usage: /<command>
   panel:
+    usage: /<command>
   rtp:
+    usage: /<command>
   dajrange:
+    usage: /<command> <nick> <rank>
+  setslots:
+    usage: /<command> <slots>

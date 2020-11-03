@@ -11,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
@@ -25,6 +24,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
+import pl.smcore.Commands.CMDsetslots;
 
 import java.util.Collections;
 
@@ -35,9 +35,11 @@ public final class smcore extends JavaPlugin implements Listener {
     int deleted;
     String sm = "§4§lSM §7";
     Inventory inv = Bukkit.getServer().createInventory(null, 27, "Panel");
-    public static smcore getInstance(){
+
+    public static smcore getInstance() {
         return instance;
     }
+
     @Override
     public void onEnable() {
         a = 0;
@@ -47,6 +49,7 @@ public final class smcore extends JavaPlugin implements Listener {
         this.getCommand("podpis").setExecutor(this);
         this.getCommand("rtp").setExecutor(new rtp(this));
         this.getCommand("dajrange").setExecutor(this);
+        this.getCommand("setslots").setExecutor(new CMDsetslots());
         loadConfig();
         scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
@@ -110,10 +113,10 @@ public final class smcore extends JavaPlugin implements Listener {
             }
         } else if (cmd.getName().equals("panel")) {
             newInventory(p);
-        } else if (cmd.getName().equals("dajrange")){
+        } else if (cmd.getName().equals("dajrange")) {
             if (p.hasPermission("sm.mod")) {
                 if (args.length == 2) {
-                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user "+args[0]+ " parent addtemp "+args[1]+" 30d");
+                    Bukkit.dispatchCommand(Bukkit.getConsoleSender(), "lp user " + args[0] + " parent addtemp " + args[1] + " 30d");
 
                 } else {
                     p.sendMessage("poprawne uzycie /dajrange nick ranga");
@@ -124,20 +127,22 @@ public final class smcore extends JavaPlugin implements Listener {
 
 
         }
-            return true;
+        return true;
     }
+
     @EventHandler
-    public void playerleverplace(BlockPlaceEvent e){
-        if(e.getBlock().getType() == Material.LEVER){
+    public void playerleverplace(BlockPlaceEvent e) {
+        if (e.getBlock().getType() == Material.LEVER) {
             e.setCancelled(true);
         }
     }
+
     @EventHandler
     public void pjoinevent(PlayerJoinEvent e) {
 
         e.setJoinMessage(null);
-        Border border = new Border(new Vector(1572.5,0,-816.5), new Vector(1589.5,255,-836.5));
-        if(border.contains(e.getPlayer().getLocation())) {
+        Border border = new Border(new Vector(1572.5, 0, -816.5), new Vector(1589.5, 255, -836.5));
+        if (border.contains(e.getPlayer().getLocation())) {
             e.getPlayer().teleport(e.getPlayer().getWorld().getSpawnLocation());
         }
     }

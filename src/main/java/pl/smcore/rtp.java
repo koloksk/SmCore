@@ -21,11 +21,11 @@ public class rtp implements CommandExecutor {
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         //Player only command
-        if(sender instanceof Player){
+        if (sender instanceof Player) {
             Player p = (Player) sender;
             int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
             //If the cooldown has expired
-            if(timeLeft == 0){
+            if (timeLeft == 0) {
                 //Use the feature
                 p.sendMessage(ChatColor.GREEN + "teleportacja!");
                 p.performCommand("tpr");
@@ -36,17 +36,17 @@ public class rtp implements CommandExecutor {
                     public void run() {
                         int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
                         cooldownManager.setCooldown(p.getUniqueId(), --timeLeft);
-                        if(timeLeft == 0){
+                        if (timeLeft == 0) {
                             this.cancel();
                         }
                     }
-                }.runTaskTimer(this.plugin, 20, 20*60);
+                }.runTaskTimer(this.plugin, 20, 20 * 60);
 
-            }else{
+            } else {
                 //Hasn't expired yet, shows how many seconds left until it does
-                p.sendMessage(ChatColor.RED.toString() +"Odczekaj "+ timeLeft + " minut przed nastepna teleportacja.");
+                p.sendMessage(ChatColor.RED.toString() + "Odczekaj " + timeLeft + " minut przed nastepna teleportacja.");
             }
-        }else{
+        } else {
             sender.sendMessage("Player-only command");
         }
 

@@ -16,12 +16,12 @@ public class Border {
         int x2 = Math.max(p1.getBlockX(), p2.getBlockX());
         int y2 = Math.max(p1.getBlockY(), p2.getBlockY());
         int z2 = Math.max(p1.getBlockZ(), p2.getBlockZ());
-        this.p1 = new Vector( x1, y1, z1);
-        this.p2 = new Vector( x2, y2, z2);
+        this.p1 = new Vector(x1, y1, z1);
+        this.p2 = new Vector(x2, y2, z2);
     }
 
     public boolean contains(Location loc) {
-        if(loc == null) {
+        if (loc == null) {
             return false;
         }
         return loc.getBlockX() >= p1.getBlockX() && loc.getBlockX() <= p2.getBlockX()
