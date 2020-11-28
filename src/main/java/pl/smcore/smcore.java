@@ -1,6 +1,7 @@
 package pl.smcore;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -15,6 +16,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityPortalEvent;
 import org.bukkit.event.entity.EntitySpawnEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerPortalEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -22,19 +24,27 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.util.Vector;
-import pl.smcore.Commands.CMDsetslots;
+//import pl.smcore.Commands.CMDfly;
+//import pl.smcore.Commands.CMDinvsee;
+import pl.smcore.Commands.CMDrtp;
+//import pl.smcore.Commands.CMDsetslots;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public final class smcore extends JavaPlugin implements Listener {
     private static smcore instance;
-
+    private final CooldownManager cooldownManager = new CooldownManager();
     int a;
     int deleted;
     String sm = "§4§lSM §7";
     Inventory inv = Bukkit.getServer().createInventory(null, 27, "Panel");
+
 
     public static smcore getInstance() {
         return instance;
@@ -47,9 +57,12 @@ public final class smcore extends JavaPlugin implements Listener {
         BukkitScheduler scheduler = getServer().getScheduler();
         this.getCommand("panel").setExecutor(this);
         this.getCommand("podpis").setExecutor(this);
-        this.getCommand("rtp").setExecutor(new rtp(this));
+        this.getCommand("rtp").setExecutor(new CMDrtp(this));
         this.getCommand("dajrange").setExecutor(this);
-        this.getCommand("setslots").setExecutor(new CMDsetslots());
+        //this.getCommand("setslots").setExecutor(new CMDsetslots());
+        //this.getCommand("invsee").setExecutor(new CMDinvsee());
+        //this.getCommand("fly").setExecutor(new CMDfly());
+
         loadConfig();
         scheduler.scheduleSyncRepeatingTask(this, new Runnable() {
             @Override
@@ -77,7 +90,13 @@ public final class smcore extends JavaPlugin implements Listener {
 
     @EventHandler
     public void blockmobs(EntitySpawnEvent e) {
-        if (e.getEntityType() == EntityType.BAT) {
+        if (e.getEntityType() == EntityType.BAT || e.getEntityType() == EntityType.PHANTOM) {
+            e.setCancelled(true);
+        }
+    }
+    @EventHandler
+    public void playerportal(EntityPortalEvent e) {
+        if(e.getEntityType() == EntityType.BOAT){
             e.setCancelled(true);
         }
     }
@@ -85,7 +104,7 @@ public final class smcore extends JavaPlugin implements Listener {
     public void clearitems() {
         for (World w : Bukkit.getWorlds()) {
             for (Entity e : w.getEntities()) {
-                if (e.getType() != EntityType.EGG && (e.getType() == EntityType.DROPPED_ITEM || e.getType() == EntityType.BOAT || e.getType() == EntityType.ARROW || e.getType() == EntityType.MINECART || e.getType() == EntityType.EXPERIENCE_ORB)) {
+                if (e.getType() != EntityType.EGG && (e.getType() == EntityType.DROPPED_ITEM || e.getType() == EntityType.ARROW || e.getType() == EntityType.SILVERFISH || e.getType() == EntityType.EXPERIENCE_ORB)) {
                     e.remove();
                     deleted++;
                 }
@@ -95,6 +114,7 @@ public final class smcore extends JavaPlugin implements Listener {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+
         Player p = (Player) sender;
         if (cmd.getName().equals("podpis")) {
             if (p.hasPermission("sm.svip")) {
@@ -129,13 +149,49 @@ public final class smcore extends JavaPlugin implements Listener {
         }
         return true;
     }
-
     @EventHandler
+    public void playerleverplace(PlayerInteractEvent e) {
+        Player p = e.getPlayer();
+        if (e.getClickedBlock() != null) {
+            if (e.getClickedBlock().getType() == Material.LEVER) {
+                int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
+                //If the cooldown has expired
+                if (timeLeft == 0) {
+                    //Use the feature
+                    //Start the countdown task
+                    cooldownManager.setCooldown(p.getUniqueId(), 2);
+                    new BukkitRunnable() {
+                        @Override
+                        public void run() {
+                            int timeLeft = cooldownManager.getCooldown(p.getUniqueId());
+                            cooldownManager.setCooldown(p.getUniqueId(), --timeLeft);
+                            if (timeLeft == 0) {
+                                this.cancel();
+                            }
+                        }
+                    }.runTaskTimer(this, 20, 20);
+
+                } else {
+                    //Hasn't expired yet, shows how many seconds left until it does
+                    e.setCancelled(true);
+                    p.sendMessage(ChatColor.RED.toString() + "Odczekaj " + timeLeft + " sekund zanim użyjesz dźwigni.");
+                }
+            }
+        }
+
+    }
+
+    /*@EventHandler
     public void playerleverplace(BlockPlaceEvent e) {
         if (e.getBlock().getType() == Material.LEVER) {
             e.setCancelled(true);
         }
+        for (int i = e.getBlockPlaced().getY(); i >= 4; i--){
+            Bukkit.getServer().getWorld(e.getPlayer().getWorld().getName()).getBlockAt(e.getBlockPlaced().getY(),i,e.getBlockPlaced().getY()).setType(Material.AIR);
+        }
     }
+
+     */
 
     @EventHandler
     public void pjoinevent(PlayerJoinEvent e) {
@@ -153,7 +209,7 @@ public final class smcore extends JavaPlugin implements Listener {
     }
 
     public void newInventory(Player player) {
-
+        inv.clear();
         inv.setItem(13, createitem(Material.OAK_SAPLING, "§b§lSpawn", "§7Teleportuje na spawn"));
         inv.setItem(15, createitem(Material.DIAMOND, "§b§lSklep", "§7Otwiera sklep"));
         inv.setItem(22, createitem(Material.NAME_TAG, "§b§lWarpy Graczy", "§7Warpy Graczy"));

@@ -1,4 +1,4 @@
-package pl.smcore.Commands;
+/*package pl.smcore.Commands;
 
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -11,7 +11,9 @@ import java.util.Properties;
 import java.util.logging.Level;
 
 public class CMDsetslots implements CommandExecutor {
+
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
         Player p = (Player) sender;
         if (p.hasPermission("sm.mod")) {
             if (args.length == 1) {
@@ -65,3 +67,5 @@ public class CMDsetslots implements CommandExecutor {
     }
 }
 
+
+ */

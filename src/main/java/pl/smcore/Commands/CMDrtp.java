@@ -1,4 +1,5 @@
-package pl.smcore;
+
+package pl.smcore.Commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -7,14 +8,15 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import pl.smcore.CooldownManager;
 
-public class rtp implements CommandExecutor {
+public class CMDrtp implements CommandExecutor {
 
     private final CooldownManager cooldownManager = new CooldownManager();
 
     private final Plugin plugin;
 
-    public rtp(Plugin plugin) {
+    public CMDrtp(Plugin plugin) {
         this.plugin = plugin;
     }
 
