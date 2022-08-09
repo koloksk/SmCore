@@ -1,4 +1,4 @@
-package pl.smcore;
+/*package pl.smcore.Utils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,4 +20,4 @@ public class CooldownManager {
     public int getCooldown(UUID player) {
         return cooldowns.getOrDefault(player, 0);
     }
-}
+}*/

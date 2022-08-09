@@ -1,4 +1,5 @@
-package pl.smcore;
+/*
+package pl.smcore.Utils;
 
 import org.bukkit.Location;
 import org.bukkit.util.Vector;
@@ -30,3 +31,4 @@ public class Border {
     }
 
 }
+*/

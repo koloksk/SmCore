@@ -1,5 +1,5 @@
 
-package pl.smcore.Commands;
+/*package pl.smcore.Commands;
 
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -8,7 +8,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import pl.smcore.CooldownManager;
+import pl.smcore.Utils.CooldownManager;
 
 public class CMDrtp implements CommandExecutor {
 
@@ -54,4 +54,4 @@ public class CMDrtp implements CommandExecutor {
 
         return true;
     }
-}
+}*/

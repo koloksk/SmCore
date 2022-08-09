@@ -13,3 +13,9 @@ commands:
     usage: /<command> <nick> <rank>
   setslots:
     usage: /<command> <slots>
+  kalendarz:
+    usage: /<command>
+  pomoc:
+    usage: /<command>
+  smcore:
+    usage: /<command>
